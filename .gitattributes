@@ -1,0 +1,8 @@
+# Normalise line endings so the repo stays consistent across platforms.
+* text=auto eol=lf
+
+# Binary types git should not touch.
+*.pdf binary
+*.png binary
+*.jpg binary
+*.ico binary

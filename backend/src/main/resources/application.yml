@@ -1,0 +1,67 @@
+spring:
+  application:
+    name: edds-backend
+
+  # Default profile runs on an in memory H2 database so the API starts with no
+  # external dependencies. Activate the "mysql" profile for a real database.
+  profiles:
+    active: h2
+
+  servlet:
+    multipart:
+      # Payload limits guard against oversized uploads that could exhaust
+      # storage. The service also enforces the same ceiling per file.
+      max-file-size: 10MB
+      max-request-size: 12MB
+
+server:
+  port: 8080
+
+# Application specific settings, all overridable through environment variables.
+edds:
+  storage:
+    location: ${EDDS_STORAGE_LOCATION:uploads}
+  cors:
+    allowed-origins: ${EDDS_CORS_ORIGINS:http://localhost:5173}
+  jwt:
+    # Override this in every real deployment. Must be at least 32 characters.
+    secret: ${EDDS_JWT_SECRET:change-me-in-production-this-is-a-dev-secret-value}
+    expiration-ms: ${EDDS_JWT_EXPIRATION_MS:86400000}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: h2
+  datasource:
+    url: jdbc:h2:mem:edds;DB_CLOSE_DELAY=-1;MODE=MySQL
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: mysql
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/edds?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:edds}
+    password: ${DB_PASSWORD:edds}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      # "update" keeps the schema in step during development. A managed
+      # migration tool would take over for production.
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    open-in-view: false

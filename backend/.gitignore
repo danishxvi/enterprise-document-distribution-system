@@ -1,0 +1,16 @@
+target/
+uploads/
+*.class
+
+# Editor and OS noise
+.idea/
+*.iml
+.vscode/
+.DS_Store
+
+# Logs
+*.log
+
+# Local env overrides
+.env
+application-local.yml
