@@ -8,27 +8,23 @@ import Button from '../components/ui/Button'
 // driven from here, so there is no need to touch the markup below.
 // -----------------------------------------------------------------------------
 const DEVELOPER = {
-  name: 'Danish',
+  name: 'Danish Husain',
   role: 'Full stack developer',
   // Set this to the exact organisation name if you want it shown publicly.
   // It is left generic by default to keep the internal project unattributed.
   context: 'a large public transit organisation',
-  blurb:
-    'A developer who enjoys turning messy, real world processes into clean, dependable software. This portal grew out of a problem I watched play out first hand: important documents getting lost in email while everyone pretended a shared drive counted as a system.',
+  lead:
+    'A full stack developer who enjoys turning real world processes into clean, dependable software, from the API and the tests all the way to the deployment.',
+  bio: [
+    'I am a software developer with a strong foundation in Core Java, object oriented programming and full stack web development. I work across the stack, Spring Boot on Java 21 at the backend and React on the front end, and I enjoy the whole cycle of building software: designing clean APIs, writing unit tested business logic, implementing proper authentication and data security, and shipping containerized deployments that actually run in production.',
+    'I am continuing to strengthen my problem solving through data structures and algorithms, and I like learning by building. Every project is a chance to pick up something new, whether that is a design pattern, a security practice or a cleaner way to structure an API.',
+  ],
   links: {
     github: 'https://github.com/danishxvi',
-    // Add your own links, or leave them blank to hide the buttons.
-    linkedin: '',
+    linkedin: 'https://www.linkedin.com/in/danishxvi',
     email: 'danish16112002@gmail.com',
   },
 }
-
-const SKILLS = [
-  { group: 'Frontend', items: ['React', 'Vite', 'Tailwind CSS', 'React Query'] },
-  { group: 'Backend', items: ['Java', 'Spring Boot', 'Spring Security', 'REST APIs'] },
-  { group: 'Data', items: ['MySQL', 'Spring Data JPA', 'Indexing', 'Pagination'] },
-  { group: 'Tooling', items: ['Docker', 'Git', 'JWT', 'CI friendly builds'] },
-]
 
 const JOURNEY = [
   {
@@ -56,11 +52,11 @@ export default function AboutDeveloperPage() {
       <SectionHeading
         eyebrow="About the developer"
         title={`Hi, I am ${DEVELOPER.name}.`}
-        lead={DEVELOPER.blurb}
+        lead={DEVELOPER.lead}
         tint="#3182CE"
       />
 
-      {/* Identity card and quick links */}
+      {/* Identity card and the fuller bio */}
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="flex flex-col items-start gap-4">
           <span className="grid h-16 w-16 place-items-center rounded-neu bg-surface text-accent-blue shadow-neu-inset">
@@ -92,26 +88,13 @@ export default function AboutDeveloperPage() {
           </div>
         </Card>
 
-        {/* Skills */}
         <Card className="lg:col-span-2">
-          <h2 className="text-base font-bold text-ink">What I built this with</h2>
-          <div className="mt-5 grid gap-6 sm:grid-cols-2">
-            {SKILLS.map(({ group, items }) => (
-              <div key={group}>
-                <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
-                  {group}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {items.map((item) => (
-                    <span
-                      key={item}
-                      className="rounded-full bg-surface px-3 py-1.5 text-xs font-medium text-ink shadow-neu-inset"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
+          <h2 className="text-base font-bold text-ink">A little about me</h2>
+          <div className="mt-4 space-y-4">
+            {DEVELOPER.bio.map((paragraph, i) => (
+              <p key={i} className="text-sm leading-relaxed text-ink-muted">
+                {paragraph}
+              </p>
             ))}
           </div>
         </Card>

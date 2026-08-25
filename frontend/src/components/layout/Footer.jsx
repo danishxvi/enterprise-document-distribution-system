@@ -48,8 +48,8 @@ export default function Footer() {
             </div>
           </div>
           <div className="mt-8 border-t border-slate-300/40 pt-6 text-xs text-ink-muted">
-            Copyright {year} Enterprise Document Distribution System. Built for
-            internal enterprise communication.
+            Copyright {year} Danish Husain. Built for internal enterprise
+            communication.
           </div>
         </div>
       </div>
