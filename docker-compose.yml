@@ -1,0 +1,51 @@
+# One command local stack: MySQL, the Spring Boot API, and the nginx served
+# React app. Run with:  docker compose up --build
+#
+# The frontend is reachable at http://localhost:8088 and proxies /api to the
+# backend, so the browser only ever talks to one origin.
+
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: edds
+      MYSQL_USER: edds
+      MYSQL_PASSWORD: edds
+      MYSQL_ROOT_PASSWORD: rootsecret
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootsecret"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: mysql
+      DB_URL: jdbc:mysql://mysql:3306/edds?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      DB_USERNAME: edds
+      DB_PASSWORD: edds
+      EDDS_JWT_SECRET: replace-this-with-a-long-random-secret-value-in-real-use
+      EDDS_CORS_ORIGINS: http://localhost:8088
+    ports:
+      - "8080:8080"
+    volumes:
+      - uploads-data:/app/uploads
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "8088:80"
+
+volumes:
+  mysql-data:
+  uploads-data:

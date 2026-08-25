@@ -1,0 +1,55 @@
+# Render blueprint. Deploys the API as a Docker web service, a managed MySQL
+# database, and the frontend as a static site. Import this from the Render
+# dashboard, then set the two secret values it asks for.
+
+databases:
+  - name: edds-mysql
+    plan: free
+    databaseName: edds
+    user: edds
+
+services:
+  - type: web
+    name: edds-backend
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: mysql
+      - key: DB_URL
+        fromDatabase:
+          name: edds-mysql
+          property: connectionString
+      - key: DB_USERNAME
+        fromDatabase:
+          name: edds-mysql
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: edds-mysql
+          property: password
+      - key: EDDS_JWT_SECRET
+        generateValue: true
+      - key: EDDS_CORS_ORIGINS
+        # Set this to your deployed frontend url after the first deploy.
+        sync: false
+
+  - type: web
+    name: edds-frontend
+    runtime: static
+    buildCommand: cd frontend && npm ci && npm run build
+    staticPublishPath: ./frontend/dist
+    envVars:
+      - key: VITE_USE_MOCK
+        value: "false"
+      - key: VITE_API_BASE_URL
+        # Point this at the deployed backend url, for example
+        # https://edds-backend.onrender.com/api
+        sync: false
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

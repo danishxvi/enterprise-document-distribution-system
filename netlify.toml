@@ -1,0 +1,20 @@
+# Netlify build for the React frontend. Netlify runs from the repository root,
+# so the base directory points it at the frontend project.
+
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = "frontend/dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+  # Set VITE_USE_MOCK to "false" and VITE_API_BASE_URL to your deployed API in
+  # the Netlify dashboard once the backend is live. Left as mock here so the
+  # site works the moment it is deployed, with no backend required.
+  VITE_USE_MOCK = "true"
+
+# Single page app fallback so deep links resolve to index.html.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
