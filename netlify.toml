@@ -4,7 +4,8 @@
 [build]
   base = "frontend"
   command = "npm run build"
-  publish = "frontend/dist"
+  # publish is resolved relative to base, so this points at frontend/dist.
+  publish = "dist"
 
 [build.environment]
   NODE_VERSION = "20"
