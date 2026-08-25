@@ -22,7 +22,7 @@ const DEVELOPER = {
   links: {
     github: 'https://github.com/danishxvi',
     linkedin: 'https://www.linkedin.com/in/danishxvi',
-    email: 'danish16112002@gmail.com',
+    email: 'danishxvi@gmail.com',
   },
 }
 
