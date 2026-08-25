@@ -1,0 +1,28 @@
+# Dependencies and build output
+node_modules/
+dist/
+target/
+
+# Uploaded files (backend local storage)
+uploads/
+backend/uploads/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor and OS noise
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+
+# Local tooling
+.claude/
