@@ -1,5 +1,6 @@
 module.exports = {
   root: true,
+  ignorePatterns: ['dist', 'node_modules'],
   env: { browser: true, es2021: true },
   extends: [
     'eslint:recommended',
@@ -11,6 +12,6 @@ module.exports = {
   settings: { react: { version: 'detect' } },
   rules: {
     'react/prop-types': 'off',
-    'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
   },
 }

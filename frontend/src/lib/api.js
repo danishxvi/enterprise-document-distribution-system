@@ -18,6 +18,32 @@ client.interceptors.request.use((config) => {
   return config
 })
 
+// An expired or revoked token comes back as 401 on any protected call. Clear
+// the stale session and send the user to sign in again, rather than leaving
+// every screen silently failing. The login call itself is excluded so a wrong
+// password still shows its message on the form.
+client.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error.response?.status
+    const isLogin = error.config?.url?.includes('/auth/login')
+    if (status === 401 && !isLogin) {
+      localStorage.removeItem('edds.token')
+      localStorage.removeItem('edds.user')
+      if (window.location.pathname !== '/login') {
+        window.location.assign('/login')
+      }
+    }
+    return Promise.reject(error)
+  }
+)
+
+// Pulls the human readable message out of an API error. The backend always
+// replies with { message }, so prefer that over axios' generic text.
+export function errorMessage(error, fallback = 'Something went wrong.') {
+  return error?.response?.data?.message ?? error?.message ?? fallback
+}
+
 // ---------------------------------------------------------------------------
 // Mock backend
 // ---------------------------------------------------------------------------
@@ -123,9 +149,9 @@ const mockApi = {
     return { success: true }
   },
 
-  // In mock mode there is no real file to stream, so the viewer falls back
-  // to a generated placeholder. The real client returns a protected url.
-  viewUrl() {
+  // In mock mode there is no real file to stream, so the viewer renders a
+  // generated placeholder instead of calling this.
+  async fetchDocumentBlob() {
     return null
   },
 }
@@ -169,10 +195,15 @@ const realApi = {
     return data
   },
 
-  viewUrl(id) {
-    return `${client.defaults.baseURL}/documents/${id}/view`
+  // Fetched as a blob through the axios client so the bearer token rides
+  // along; an iframe pointed straight at the url could not send it. The path
+  // is relative because axios already prefixes the base url.
+  async fetchDocumentBlob(id) {
+    const { data } = await client.get(`/documents/${id}/view`, {
+      responseType: 'blob',
+    })
+    return data
   },
 }
 
 export const api = USE_MOCK_API ? mockApi : realApi
-export { client }

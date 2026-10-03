@@ -1,37 +1,30 @@
 import { Link } from 'react-router-dom'
+import { cn } from '../../lib/cn'
 
-// The wordmark. A small extruded tile holding a document glyph, paired with
-// the full name and a short tag so the brand reads clearly in the nav bar.
-export default function Logo({ compact = false }) {
+// Wordmark: a blue tile with a document glyph, then the name. `inverse`
+// renders it for use on a blue background.
+export default function Logo({ inverse = false, className }) {
   return (
-    <Link to="/" className="flex items-center gap-3">
-      <span className="grid h-11 w-11 place-items-center rounded-neu-sm bg-surface shadow-neu">
-        <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
-          <rect
-            x="5"
-            y="3"
-            width="14"
-            height="18"
-            rx="2.5"
-            fill="none"
-            stroke="#3182CE"
-            strokeWidth="1.8"
-          />
-          <line x1="8.5" y1="8" x2="15.5" y2="8" stroke="#718096" strokeWidth="1.6" strokeLinecap="round" />
-          <line x1="8.5" y1="11.5" x2="15.5" y2="11.5" stroke="#718096" strokeWidth="1.6" strokeLinecap="round" />
-          <line x1="8.5" y1="15" x2="13" y2="15" stroke="#38B2AC" strokeWidth="1.6" strokeLinecap="round" />
+    <Link to="/" className={cn('flex items-center gap-3', className)} aria-label="Home">
+      <span
+        className={cn(
+          'grid h-10 w-10 place-items-center rounded-xl',
+          inverse ? 'bg-white text-brand-500' : 'bg-brand-500 text-white'
+        )}
+      >
+        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
+          <rect x="5" y="3" width="14" height="18" rx="2.5" stroke="currentColor" strokeWidth="2" />
+          <path d="M8.5 8h7M8.5 11.5h7M8.5 15h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
         </svg>
       </span>
-      {!compact && (
-        <span className="leading-tight">
-          <span className="block text-sm font-extrabold tracking-tight text-ink">
-            Document Distribution
-          </span>
-          <span className="block text-xs font-medium text-ink-muted">
-            Enterprise Portal
-          </span>
+      <span className="leading-tight">
+        <span className={cn('block text-sm font-extrabold', inverse ? 'text-white' : 'text-brand-900')}>
+          Document Distribution
         </span>
-      )}
+        <span className={cn('block text-xs font-semibold', inverse ? 'text-white/75' : 'text-brand-500')}>
+          Enterprise Portal
+        </span>
+      </span>
     </Link>
   )
 }

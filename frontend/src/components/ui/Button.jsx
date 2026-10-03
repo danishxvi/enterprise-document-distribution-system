@@ -1,48 +1,44 @@
 import { cn } from '../../lib/cn'
 
-// The workhorse button. It rests extruded, tightens its shadow on hover so
-// it feels lightly pressed, and sinks to an inset state while active. That
-// three step motion is what sells the soft, physical feel.
-
+// Variants cover the two surfaces the design uses: white pages and blue bands.
+// `inverse` and `outlineInverse` are the ones meant to sit on a blue band.
 const VARIANTS = {
-  // Neutral surface button.
-  default: 'text-ink hover:text-ink',
-  // Accent colored label for primary actions, still on the soft surface.
-  primary: 'text-accent-blue font-semibold hover:text-accent-blue',
-  teal: 'text-accent-teal font-semibold hover:text-accent-teal',
-  danger: 'text-red-500 font-semibold hover:text-red-500',
+  primary: 'bg-brand-500 text-white border-brand-500 hover:bg-brand-600 hover:border-brand-600',
+  secondary: 'bg-white text-brand-500 border-brand-500 hover:bg-brand-50',
+  ghost: 'bg-transparent text-brand-500 border-transparent hover:bg-brand-50',
+  inverse: 'bg-white text-brand-500 border-white hover:bg-brand-50 hover:border-brand-50',
+  outlineInverse: 'bg-transparent text-white border-white/70 hover:bg-white/10 hover:border-white',
 }
 
 const SIZES = {
-  sm: 'px-4 py-2 text-sm',
-  md: 'px-5 py-2.5 text-sm',
-  lg: 'px-7 py-3 text-base',
+  sm: 'h-9 px-4 text-sm',
+  md: 'h-11 px-5 text-sm',
+  lg: 'h-12 px-6 text-base',
+}
+
+// Exported so router links can look exactly like buttons without nesting a
+// button inside an anchor.
+export function buttonClasses({ variant = 'primary', size = 'md', className } = {}) {
+  return cn(
+    'inline-flex items-center justify-center gap-2 rounded-xl border font-semibold',
+    'transition-colors duration-150',
+    'disabled:cursor-not-allowed disabled:opacity-50',
+    VARIANTS[variant],
+    SIZES[size],
+    className
+  )
 }
 
 export default function Button({
   children,
-  variant = 'default',
+  variant = 'primary',
   size = 'md',
   className,
   type = 'button',
-  disabled,
   ...props
 }) {
   return (
-    <button
-      type={type}
-      disabled={disabled}
-      className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-neu-sm bg-surface font-medium',
-        'shadow-neu transition-all duration-200 ease-out',
-        'hover:shadow-neu-sm active:shadow-neu-inset-sm active:translate-y-px',
-        'disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-neu',
-        VARIANTS[variant],
-        SIZES[size],
-        className
-      )}
-      {...props}
-    >
+    <button type={type} className={buttonClasses({ variant, size, className })} {...props}>
       {children}
     </button>
   )

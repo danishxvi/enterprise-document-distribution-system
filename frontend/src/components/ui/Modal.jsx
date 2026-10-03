@@ -3,9 +3,8 @@ import { createPortal } from 'react-dom'
 import { X } from 'lucide-react'
 import { cn } from '../../lib/cn'
 
-// A centered dialog rendered into a portal. It locks body scroll, closes on
-// Escape and on backdrop click, and keeps the soft surface look by floating
-// an extruded panel over a lightly blurred veil.
+// Centered dialog in a portal. Locks body scroll, closes on Escape and on a
+// backdrop click.
 export default function Modal({ open, onClose, title, children, className }) {
   useEffect(() => {
     if (!open) return
@@ -29,28 +28,25 @@ export default function Modal({ open, onClose, title, children, className }) {
       aria-modal="true"
       aria-label={title}
     >
-      <div
-        className="absolute inset-0 bg-slate-500/20 backdrop-blur-sm"
-        onClick={onClose}
-      />
+      <div className="absolute inset-0 bg-brand-900/60" onClick={onClose} />
       <div
         className={cn(
-          'relative z-10 w-full max-w-3xl animate-scale-in rounded-neu bg-surface p-6 shadow-neu',
+          'relative z-10 flex max-h-[92vh] w-full max-w-3xl animate-scale-in flex-col overflow-hidden rounded-2xl bg-white shadow-panel',
           className
         )}
       >
-        <div className="mb-4 flex items-center justify-between gap-4">
-          <h2 className="text-lg font-bold text-ink">{title}</h2>
+        <div className="flex items-start justify-between gap-4 border-b border-brand-100 px-6 py-4">
+          <h2 className="text-lg font-bold leading-snug text-brand-900">{title}</h2>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close dialog"
-            className="grid h-9 w-9 place-items-center rounded-full bg-surface text-ink-muted shadow-neu transition-all hover:shadow-neu-sm active:shadow-neu-inset-sm"
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-brand-200 text-brand-500 transition hover:border-brand-500 hover:bg-brand-50"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
-        {children}
+        <div className="overflow-y-auto px-6 py-5">{children}</div>
       </div>
     </div>,
     document.body

@@ -7,13 +7,16 @@ export const DOC_TYPES = [
   { value: 'NOTIFICATION', label: 'Notification' },
 ]
 
-// Each type gets its own quiet accent so the grid is scannable at a glance.
+// The palette is blue and white only, so document types are told apart by
+// fill style rather than by hue: solid, tinted and outlined.
 export const DOC_TYPE_STYLES = {
-  CIRCULAR: { label: 'Circular', text: '#2C5282', dot: '#3182CE' },
-  ORDER: { label: 'Order', text: '#285E61', dot: '#38B2AC' },
-  NOTIFICATION: { label: 'Notification', text: '#9C4221', dot: '#DD6B20' },
+  CIRCULAR: { label: 'Circular', className: 'bg-brand-500 text-white border-brand-500' },
+  ORDER: { label: 'Order', className: 'bg-brand-100 text-brand-700 border-brand-100' },
+  NOTIFICATION: { label: 'Notification', className: 'bg-white text-brand-500 border-brand-500' },
 }
 
+// Mirrors the branches the backend seeds on first start, in the same order,
+// so the ids line up with the database.
 export const BRANCHES = [
   { id: 1, name: 'Operations', code: 'OPS' },
   { id: 2, name: 'Human Resources', code: 'HR' },
@@ -29,6 +32,8 @@ export const ROLES = {
 }
 
 export const PAGE_SIZE = 9
+
+export const MAX_FILE_MB = 10
 
 // When no backend is reachable the app runs entirely on seeded mock data.
 // Flip this off through the env file once the Spring Boot service is up.

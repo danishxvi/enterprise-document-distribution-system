@@ -4,37 +4,27 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Neumorphic base surface. Everything shares this tone so the
-        // light and dark shadows read as a single sculpted material.
-        surface: '#F0F5F9',
-        ink: {
-          DEFAULT: '#2D3748', // primary text, deep slate
-          muted: '#718096', // secondary text, cool gray
-        },
-        accent: {
-          blue: '#3182CE',
-          teal: '#38B2AC',
-          amber: '#DD6B20',
+        // The whole interface is built from one blue and white. Every value
+        // below is a tint or shade of the same corporate blue, so headings,
+        // borders and backgrounds all stay inside the two colour rule.
+        brand: {
+          50: '#F2F8FC',
+          100: '#E1EFF8',
+          200: '#BFDDF0',
+          300: '#8CC3E6',
+          500: '#007CC3',
+          600: '#006AA8',
+          700: '#00578A',
+          900: '#0B2A47',
         },
       },
       fontFamily: {
         sans: ['Inter', 'Segoe UI', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
-        // Extruded: cards, containers, resting buttons.
-        neu: '9px 9px 16px rgba(163,177,198,0.6), -9px -9px 16px rgba(255,255,255,0.5)',
-        // A tighter extrusion used on hover so an element feels lightly touched.
-        'neu-sm': '5px 5px 10px rgba(163,177,198,0.55), -5px -5px 10px rgba(255,255,255,0.6)',
-        // Pressed: inputs, active toggles, anything that should look sunken.
-        'neu-inset':
-          'inset 6px 6px 10px rgba(163,177,198,0.7), inset -6px -6px 10px rgba(255,255,255,0.8)',
-        // A soft pressed state for buttons on click.
-        'neu-inset-sm':
-          'inset 4px 4px 8px rgba(163,177,198,0.65), inset -4px -4px 8px rgba(255,255,255,0.75)',
-      },
-      borderRadius: {
-        neu: '16px',
-        'neu-sm': '12px',
+        // A soft blue lift used on hover, never a grey drop shadow.
+        card: '0 12px 32px -14px rgba(0, 124, 195, 0.35)',
+        panel: '0 24px 60px -24px rgba(11, 42, 71, 0.45)',
       },
       keyframes: {
         'fade-in': {

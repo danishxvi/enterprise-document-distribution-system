@@ -1,27 +1,21 @@
 import { DOC_TYPE_STYLES } from '../../lib/constants'
+import { cn } from '../../lib/cn'
 
-// A quiet type badge. Instead of a loud filled pill it uses a soft tinted
-// surface, a colored dot and colored text so it stays gentle on the
-// low contrast neumorphic background.
-export default function TypeBadge({ type }) {
+// Document type label. With only blue and white available, the three types
+// read as solid, tinted and outlined chips instead of three different hues.
+export default function TypeBadge({ type, className }) {
   const style = DOC_TYPE_STYLES[type] ?? {
     label: type,
-    text: '#4A5568',
-    dot: '#718096',
+    className: 'bg-brand-50 text-brand-700 border-brand-200',
   }
   return (
     <span
-      className="neu-badge"
-      style={{
-        color: style.text,
-        backgroundColor: `${style.dot}1a`, // ~10% tint of the accent
-      }}
+      className={cn(
+        'inline-flex items-center rounded-md border px-2.5 py-1 text-xs font-semibold uppercase tracking-wide',
+        style.className,
+        className
+      )}
     >
-      <span
-        className="h-1.5 w-1.5 rounded-full"
-        style={{ backgroundColor: style.dot }}
-        aria-hidden="true"
-      />
       {style.label}
     </span>
   )

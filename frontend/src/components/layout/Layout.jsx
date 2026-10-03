@@ -1,17 +1,23 @@
-import { Outlet } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
 import Navbar from './Navbar'
 import Footer from './Footer'
 
-// The shared frame for every routed page: sticky nav, a centered content
-// column capped at 7xl, and the footer. Individual pages own their padding.
+// Shared frame for routed pages. Pages own their width because most of them
+// open with a full bleed blue band, then drop into the standard Container.
 export default function Layout() {
+  const { pathname } = useLocation()
+
+  // Start each page at the top, as a full page load would.
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex-1">
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <Outlet />
-        </div>
+        <Outlet />
       </main>
       <Footer />
     </div>
