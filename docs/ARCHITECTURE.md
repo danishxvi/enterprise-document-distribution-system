@@ -80,32 +80,61 @@ com.edds
 └── user                       User entity, role, repository
 ```
 
+Tests live under `backend/src/test` and mirror the same packages:
+`security/JwtServiceTest` for token handling, and
+`document/DocumentApiIntegrationTest`, which drives the real HTTP layer with
+MockMvc against H2.
+
+### Error handling
+
+`GlobalExceptionHandler` turns every failure into the same JSON shape
+(`timestamp`, `status`, `error`, `message`, `path`). Client mistakes such as an
+unknown path, an invalid enum value or a missing form field map to 4xx codes.
+Only unexpected failures return 500, and those are logged with a stack trace
+because the response body deliberately hides internal detail.
+
 ## Frontend structure
 
 ```
 src
 ├── components
-│   ├── ui                     Neumorphic primitives (Button, Card, Input, ...)
-│   ├── layout                 Navbar, Footer, Layout, Logo
-│   ├── documents              DocumentCard, FilterBar, Pagination, PdfViewer
+│   ├── ui                     Button, Card, Input, Select, Badge, Modal, Notice, ...
+│   ├── layout                 Navbar, Footer, Layout, Logo, Container, PageHero
+│   ├── documents              DocumentCard, FilterBar, Pagination, PdfViewerModal
 │   └── RouteGuards.jsx        Protected and admin only routes
 ├── context                    AuthContext (session state)
-├── lib                        api client, constants, mock data, helpers
+├── lib                        api client, constants, mock data, hooks, helpers
 └── pages                      Home, Login, dashboards, info pages, 404
 ```
 
+`lib/api.js` exposes the same functions in two implementations, a mock one
+backed by local storage and a real one backed by axios, and the
+`VITE_USE_MOCK` flag picks one at build time. The real client attaches the
+bearer token on each request and, on a 401 from an expired session, clears it
+and returns the user to sign in.
+
 ## Design system
 
-The interface follows a single "neumorphic" visual language. Two shadow
-recipes do most of the work:
+The interface uses a corporate style built from exactly two colours: one blue
+and white. Every value in the `brand` palette in `tailwind.config.js` is a tint
+or shade of the same blue (`brand-500`, `#007CC3`), used for text, borders and
+backgrounds alike, so no other hue appears anywhere.
 
-- **Extruded** surfaces (cards, resting buttons, containers) sit slightly raised
-  above the background with a paired light and dark shadow.
-- **Pressed** surfaces (inputs, active states) use inset shadows to look sunken.
+- **Page banners.** Each page opens with a full width blue `PageHero`. On the
+  dashboards, the first white panel overlaps the bottom of the banner to tie the
+  header to the content.
+- **Rounded, boxy surfaces.** Content sits in white cards with a thin blue
+  border and large corner radius. Interactive cards firm their border and lift
+  slightly on hover.
+- **Type without extra colours.** The three document types are distinguished by
+  fill: circulars are solid blue, orders are a blue tint, notifications are
+  outlined.
+- **Errors without red.** Error notices use a stronger blue border, bold text and
+  an icon, so problems stand out while staying inside the palette.
 
-Both live on the same off white background tone, which is what lets the shadows
-read as sculpted material rather than flat boxes. The recipes are defined once as
-Tailwind shadow utilities and reused across every component.
+Shared recipes such as `.field` (inputs and selects) and `.icon-tile` live in
+`src/index.css`, and `buttonClasses()` lets router links render exactly like
+buttons.
 
 ## Key decisions and trade offs
 

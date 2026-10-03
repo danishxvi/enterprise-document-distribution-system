@@ -120,15 +120,25 @@ Any authenticated user. Returns the branch master list.
 ]
 ```
 
+## Health
+
+### `GET /actuator/health`
+
+Public. Returns `{"status":"UP"}` when the API and its database are reachable.
+Used as the hosting platform's health check. No other actuator endpoints are
+exposed, and no internal details are included.
+
 ## Status codes
 
-| Code | Meaning                                             |
-| ---- | --------------------------------------------------- |
-| 200  | Success                                             |
-| 201  | Document created                                    |
-| 204  | Document retired                                    |
-| 400  | Invalid input or wrong file type                    |
-| 401  | Missing or invalid token, or bad credentials        |
-| 403  | Authenticated but lacking the required role         |
-| 404  | Resource not found                                  |
-| 413  | Upload larger than the allowed limit                |
+| Code | Meaning                                                              |
+| ---- | -------------------------------------------------------------------- |
+| 200  | Success                                                              |
+| 201  | Document created                                                     |
+| 204  | Document retired                                                     |
+| 400  | Invalid input: wrong file type, file over 10 MB, missing field, or an invalid parameter value such as `type=MEMO` |
+| 401  | Missing, invalid or expired token, or bad credentials                |
+| 403  | Authenticated but lacking the required role                          |
+| 404  | Document not found or retired, or no endpoint at that path           |
+| 405  | HTTP method not supported on that path                               |
+| 413  | Request larger than the multipart limit                              |
+| 500  | Unexpected server error; details are logged, not returned            |
