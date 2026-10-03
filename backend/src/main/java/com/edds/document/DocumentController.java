@@ -3,9 +3,11 @@ package com.edds.document;
 import com.edds.common.PageResponse;
 import com.edds.document.dto.DocumentResponse;
 import com.edds.storage.FileStorageService;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import org.springframework.core.io.Resource;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -83,11 +85,14 @@ public class DocumentController {
     public ResponseEntity<Resource> view(@PathVariable Long id) {
         Document doc = service.getActiveEntity(id);
         Resource resource = storage.loadAsResource(doc.getFilePath());
+        // The file name comes from the uploader, so it is encoded by Spring
+        // rather than concatenated into the header by hand.
+        ContentDisposition disposition = ContentDisposition.inline()
+            .filename(doc.getFileName(), StandardCharsets.UTF_8)
+            .build();
         return ResponseEntity.ok()
             .contentType(MediaType.APPLICATION_PDF)
-            .header(
-                HttpHeaders.CONTENT_DISPOSITION,
-                "inline; filename=\"" + doc.getFileName() + "\"")
+            .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
             .body(resource);
     }
 }

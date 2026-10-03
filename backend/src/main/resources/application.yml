@@ -15,12 +15,25 @@ spring:
       max-request-size: 12MB
 
 server:
-  port: 8080
+  # Hosting platforms such as Render inject PORT; locally it falls back to 8080.
+  port: ${PORT:8080}
+
+# Only the health endpoint is exposed, and without internal details, so the
+# probe used by the hosting platform reveals nothing about the environment.
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
 
 # Application specific settings, all overridable through environment variables.
 edds:
   storage:
     location: ${EDDS_STORAGE_LOCATION:uploads}
+    max-file-size: 10MB
   cors:
     allowed-origins: ${EDDS_CORS_ORIGINS:http://localhost:5173}
   jwt:

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -32,9 +33,14 @@ public class FileStorageService {
 
     private final Tika tika = new Tika();
     private final Path root;
+    private final DataSize maxFileSize;
 
-    public FileStorageService(@Value("${edds.storage.location:uploads}") String location) {
+    public FileStorageService(
+        @Value("${edds.storage.location:uploads}") String location,
+        @Value("${edds.storage.max-file-size:10MB}") DataSize maxFileSize
+    ) {
         this.root = Paths.get(location).toAbsolutePath().normalize();
+        this.maxFileSize = maxFileSize;
     }
 
     @PostConstruct
@@ -53,6 +59,12 @@ public class FileStorageService {
     public String store(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new BadRequestException("A file is required.");
+        }
+        // The multipart limit already rejects oversized requests; this repeats
+        // the check here so the rule holds even if that config is loosened.
+        if (file.getSize() > maxFileSize.toBytes()) {
+            throw new BadRequestException(
+                "The file exceeds the " + maxFileSize.toMegabytes() + " MB limit.");
         }
 
         String detected;

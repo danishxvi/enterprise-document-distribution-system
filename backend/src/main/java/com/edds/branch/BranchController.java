@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Serves the branch master list that populates the filter and upload
- * dropdowns. Read only, and available to any authenticated user.
+ * Serves the branch master list for any client that needs it. Read only, and
+ * available to any authenticated user. The bundled web client ships the same
+ * seeded list as a constant, so this endpoint is the source of truth for
+ * integrations and for deployments that add branches of their own.
  */
 @RestController
 @RequestMapping("/api/branches")
